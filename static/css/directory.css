@@ -49,3 +49,77 @@ ul{
         }
     }
 }
+
+* { 
+  margin: 0; 
+  padding: 0; 
+}
+
+body { 
+  margin: 2px; 
+}
+
+ul {
+  margin: 0 0 0 20px; 
+  list-style: none; 
+  line-height: 2em; 
+  font-family: Arial;
+}
+
+li {
+  font-size: 16px;
+  position: relative;
+}
+
+li:before, li:after {
+  content: '';
+  position: absolute;
+  left: -15px;
+  display: block;
+  border-left: 1px solid #ddd;
+}
+
+li:before {
+  top: 0;
+  height: 1em;
+  border-bottom: 1px solid #ddd;
+  width: 10px;
+}
+
+li:after {
+  bottom: -7px;
+  height: 100%;
+}
+
+li.root {
+  margin: 0 -20px 0 -20px;
+}
+
+li.root:before, li.root:after {
+  display: none;
+}
+
+li:last-child:after {
+  display: none;
+}
+
+/* Toggle Sections */
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"] + label + ul {
+  display: none;
+}
+
+input[type="checkbox"]:checked + label + ul {
+  display: block;
+}
+
+label {
+  cursor: pointer;
+}
+
+label > img {
+  vertical-align: middle;
+}
