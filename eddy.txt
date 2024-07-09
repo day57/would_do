@@ -1,0 +1,27 @@
+Using CSS for Expand/Collapse (Optional)
+If you plan to make each level expandable/collapsible without JavaScript, you can add a CSS-only toggle feature using checkboxes:
+
+html
+Copy code
+<li>
+    <input type="checkbox" id="design-patterns" hidden>
+    <label for="design-patterns"><span>Design patterns/</span></label>
+    <ul>
+        <li>Fluent_Interface.txt</li>
+    </ul>
+</li>
+And then in your CSS:
+
+css
+Copy code
+.tree input[type="checkbox"] + label + ul {
+    display: none;
+}
+
+.tree input[type="checkbox"]:checked + label + ul {
+    display: block;
+}
+
+.tree label {
+    cursor: pointer;
+}

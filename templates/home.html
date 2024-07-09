@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.js') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/directory.css') }}">
+</head>
+<body>
+    <div class="main">
+        <div class = "nav">
+            <p> Item 1</p>
+            <p> Item 2</p>
+            <p> Item 3</p>
+        </div>
+        <div class="directory-tree">
+            <ul class="tree">
+                <li class="root">root/
+                    <ul>
+                        <li><span>Design patterns/</span>
+                            <ul>
+                                <li>Fluent_Interface.txt</li>
+                            </ul>
+                        </li>
+                        <li><span>Security/</span>
+                            <ul>
+                                <li>Content_Security_Policy.txt</li>
+                            </ul>
+                        </li>
+                        <li><span>JS Building Blocks/</span>
+                            <ul>
+                                <li>Event_Delegation.txt</li>
+                                <li>MutationObserver.txt</li>
+                                <li>Bookmarklet_collection.txt</li>
+                                <li>Reflect_APIs.txt</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <noscript>
+        <strong>JavaScript is disabled on your browser.</strong>
+    </noscript>
+    <script src="script.js"></script>
+</body>
+</html>
