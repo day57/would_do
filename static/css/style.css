@@ -1,31 +1,101 @@
-.main{
-    height: 100vh;
+:root{
+    --backgorund-color: #d6dbdb;
+    --text-color: #d3d3d3;
+    --header-title-color: #e0ffff;
+    --link-color: #2e8b57;
+    --border-divider-color: #708090;
+    --hover-highlight-color:#5f9ea0;
+    --footer-secondary-text-color:#b0c4de;
+    --nav-bg:#008b8b;
+    --outline:#778899;
+    --body-bg:#36454f;
 }
+
+
+body {
+    background-color: var(--backgorund-color);
+}
+
+
+
+.text {
+    color: var(--text-color);
+}
+
+
+.main{
+    min-height: 100vh;
+    
+}
+
+.nav {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 0 10px 0;
+    
+
+}
+
+#nav-one {
+    margin: 0px 10px 0 0px;
+ 
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width:70%;
+   
+}
+
+.img-ctn {
+    height: 45px;
+    width: 45px;
+    background-color: var(--link-color);
+}
+
+.nav-left {
+    display: flex;
+    justify-content: left;
+  
+}
+
+.nav-right {
+    display: inline;
+}
+
 
 .main-content {
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: row;
+    justify-content: center;  
 }
-.nav {
+
+.main-content-container {
+    width: 70%;
     display: flex;
-    justify-content: space-around;
-    width: 100%;
-    background-color: blue;
-    
-}
-.folder_img{
-    height: 24px;
-    width: 24px;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    background-color: var(--body-bg);
+    margin-bottom: 3%;
+    overflow: hidden;
+    min-height: 600px;
+  
 }
 
 .directory-tree{
-    background-color: rgb(117, 117, 117);
-    min-width: 30vw;
+    min-width: 25vw;
+    padding: 10px;
 }
-.actor-content {
-    background-color: yellow;
-    width: 100%;
-}
+
+
+
+
+
+
 

@@ -1,0 +1,107 @@
+.window-content {
+    width: 100%;
+    min-height: 600px; /* Set a fixed height or max-height */
+    justify-self: center;
+    align-self: center;
+    display: flex;
+    flex-direction: column; /* Ensure content flows vertically */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hides horizontal scrolling */
+    
+    border-radius: 6px 6px 0 0;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+
+  
+
+   
+    
+}
+
+/* Ensure child elements do not overflow */
+.window-content > * {
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+
+
+
+
+
+
+.window-content-container {
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+
+    overflow-y: scroll;
+}
+
+.window-content-container::-webkit-scrollbar {
+    display: none;
+}
+
+.window-content-container{
+    -ms-overflow-style:none;
+    scrollbar-width: none;
+}
+
+
+.window-content-header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content:space-between;
+ 
+    background-color: var(--border-divider-color);
+    border-radius: 6px 6px 0 0;
+
+}
+
+.file_info_left {
+    padding: 6px;
+}
+
+.file_info_right {
+    padding: 6px;
+    display: flex;
+    justify-content: row;
+}
+
+#file_name {
+
+}
+
+#file_size {
+    margin: 0 3px 0 0;
+}
+
+#download_button {
+
+}
+
+pre {
+    padding: 6px;
+    max-height: 600px; /* or any specific height */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hides horizontal scrolling */
+}
+
+code {
+    width: 100%;
+    
+}
+
+.content_background {
+    background-color: white;
+}
+
+.content_background  img {
+    max-height: 600px; /* or any specific height */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hides horizontal scrolling */
+    
+
+}
+
