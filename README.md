@@ -19,7 +19,7 @@ This is a Flask-based web application that allows users to navigate a directory 
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/file-viewer.git
+   git clone https://github.com/yourusername/would_do.git
    cd file-viewer
    ```
 
