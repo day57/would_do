@@ -1,22 +1,59 @@
+.content_background {
+    background-color: white;
+    border-radius: 0px 0px 6px 6px;
+}
+
+.content_background  img {
+    max-height: 700px; /* or any specific height */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hides horizontal scrolling */
+    
+
+}
+
 .window-content {
     width: 100%;
-    min-height: 600px; /* Set a fixed height or max-height */
+    min-height: auto; /* Set a fixed height or max-height */
     justify-self: center;
     align-self: center;
     display: flex;
     flex-direction: column; /* Ensure content flows vertically */
     overflow-y: auto; /* Enables vertical scrolling */
     overflow-x: hidden; /* Hides horizontal scrolling */
+
     
-    border-radius: 6px 6px 0 0;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
+
+    scrollbar-width: 3px;
+    scroll-behavior: smooth;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    
 
   
-
-   
-    
 }
+
+/* window-content-container scroll
+/* For WebKit browsers (Chrome, Safari, Edge) */
+.window-content-container::-webkit-scrollbar {
+    width: 12px;  /* Width of the scrollbar */
+}
+  
+/* The part of the scrollbar (track) that's not the draggable part (thumb) */
+.window-content-container::-webkit-scrollbar-track {
+    background: none;  /* No background */
+}
+  
+/* The draggable part of the scrollbar */
+.window-content-container::-webkit-scrollbar-thumb {
+    background-color: #888;  /* Change this to the color you want */
+    border-radius: 10px;  /* Rounded corners */
+    border: 3px solid #ffffff;  /* Optional: Add a border around the thumb to create space between thumb and track */
+}
+  
+/* Change the color when hovering over the scrollbar thumb */
+.window-content-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;  /* Darker color on hover */
+}
+
 
 /* Ensure child elements do not overflow */
 .window-content > * {
@@ -36,11 +73,10 @@
     width: 100%;
 
     overflow-y: scroll;
+    color: var(--text-color);
 }
 
-.window-content-container::-webkit-scrollbar {
-    display: none;
-}
+
 
 .window-content-container{
     -ms-overflow-style:none;
@@ -53,9 +89,11 @@
     flex-direction: row;
     width: 100%;
     justify-content:space-between;
- 
-    background-color: var(--border-divider-color);
+
+    background-color: var(--backgorund-color);
     border-radius: 6px 6px 0 0;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+
 
 }
 
@@ -70,7 +108,7 @@
 }
 
 #file_name {
-
+    
 }
 
 #file_size {
@@ -85,23 +123,15 @@ pre {
     padding: 6px;
     max-height: 600px; /* or any specific height */
     overflow-y: auto; /* Enables vertical scrolling */
-    overflow-x: hidden; /* Hides horizontal scrolling */
+    overflow-x: auto; /* Hides horizontal scrolling */
 }
+
+
 
 code {
     width: 100%;
+
     
 }
 
-.content_background {
-    background-color: white;
-}
-
-.content_background  img {
-    max-height: 600px; /* or any specific height */
-    overflow-y: auto; /* Enables vertical scrolling */
-    overflow-x: hidden; /* Hides horizontal scrolling */
-    
-
-}
 

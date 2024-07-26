@@ -1,6 +1,6 @@
 :root{
     --backgorund-color: #d6dbdb;
-    --text-color: #d3d3d3;
+    --text-color: #636763;
     --header-title-color: #e0ffff;
     --link-color: #2e8b57;
     --border-divider-color: #708090;
@@ -8,12 +8,13 @@
     --footer-secondary-text-color:#b0c4de;
     --nav-bg:#008b8b;
     --outline:#778899;
-    --body-bg:#36454f;
+    --body-bg:#66737c;
 }
 
 
 body {
     background-color: var(--backgorund-color);
+
 }
 
 
@@ -22,6 +23,30 @@ body {
     color: var(--text-color);
 }
 
+/* Normal state */
+a {
+    color: var(--text-color);  /* Normal color */
+    text-decoration: none;  /* No underline */
+}
+  
+/* Hover state */
+a:hover {
+    color: var(--hover-highlight-color);  /* Color when hovering */
+    text-decoration: underline;  /* Underline on hover */
+}
+  
+/* Active state */
+a:active {
+    color: var(--text-color);  /* Color when the link is active (clicked) */
+    text-decoration: none;  /* Underline when active */
+}
+  
+/* Visited state */
+a:visited {
+    color: var(--text-color);  /* Color for visited links */
+    text-decoration: none;  /* No underline for visited links */
+}
+  
 
 .main{
     min-height: 100vh;
@@ -81,11 +106,12 @@ body {
     flex-direction: row;
     justify-content: center;
     align-content: center;
-    background-color: var(--body-bg);
+    background-color: rgb(240, 240, 240);
     margin-bottom: 3%;
     overflow: hidden;
     min-height: 600px;
-  
+    border-radius: 6px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 .directory-tree{
@@ -99,3 +125,42 @@ body {
 
 
 
+
+
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 12px;  /* Width of the scrollbar */
+}
+  
+/* The part of the scrollbar (track) that's not the draggable part (thumb) */
+::-webkit-scrollbar-track {
+    background: none;  /* No background */
+}
+  
+/* The draggable part of the scrollbar */
+::-webkit-scrollbar-thumb {
+    background-color: #888;  /* Change this to the color you want */
+    border-radius: 10px;  /* Rounded corners */
+    border: 3px solid #ffffff;  /* Optional: Add a border around the thumb to create space between thumb and track */
+}
+  
+/* Change the color when hovering over the scrollbar thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;  /* Darker color on hover */
+}
+  
+/* For Firefox */
+html {
+    scrollbar-width: thin;  /* Thin scrollbar */
+    scrollbar-color: #888 transparent;  /* Thumb color and track color (transparent for no background) */
+}
+  
+/* For IE and Edge */
+body {
+    -ms-overflow-style: none;  /* Hide scrollbar */
+}
+  
+body::-webkit-scrollbar {
+    display: none;  /* Hide scrollbar */
+}

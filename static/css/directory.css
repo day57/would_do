@@ -15,9 +15,9 @@ ul{
             top: 0px;
             content: '';
             display: block;
-            border-left: 1px solid #ddd;
+            border-left: 1px solid var(--link-color);
             height: 1em;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--link-color);
             width: 10px;
         }
 
@@ -27,7 +27,7 @@ ul{
             bottom: -7px;
             content: '';
             display: block;
-            border-left: 1px solid #ddd;
+            border-left: 1px solid var(--link-color);
             height: 100%;
         }
         
@@ -77,13 +77,13 @@ li:before, li:after {
   position: absolute;
   left: -15px;
   display: block;
-  border-left: 1px solid #ddd;
+  border-left: 1px solid var(--link-color);
 }
 
 li:before {
   top: 0;
   height: 1em;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--link-color);
   width: 10px;
 }
 
