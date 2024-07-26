@@ -27,6 +27,7 @@ body {
 a {
     color: var(--text-color);  /* Normal color */
     text-decoration: none;  /* No underline */
+    background-color: transparent;
 }
   
 /* Hover state */
@@ -45,6 +46,12 @@ a:active {
 a:visited {
     color: var(--text-color);  /* Color for visited links */
     text-decoration: none;  /* No underline for visited links */
+}
+
+a img {
+    height: 27px;
+    background-color: transparent;
+
 }
   
 
@@ -77,9 +84,9 @@ a:visited {
 }
 
 .img-ctn {
-    height: 45px;
-    width: 45px;
-    background-color: var(--link-color);
+    height: 36px;
+    width: 36px;
+    background-color: transparent;
 }
 
 .nav-left {
@@ -89,7 +96,12 @@ a:visited {
 }
 
 .nav-right {
-    display: inline;
+    display: flex;
+}
+
+#nav-icon {
+    width: 100%;
+    height: 100%;
 }
 
 

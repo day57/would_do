@@ -15,11 +15,11 @@
         <div class = "nav">
             <div class="nav-container">
                 <div class="nav-left">
-                    <div class="img-ctn" id="nav-one"> about </div>
-                    <div class="img-ctn"> terms </div>
+                    <a class="img-ctn" id="nav-one"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"> </a>
+                    <a class="img-ctn"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"></a>
                 </div>
                 <div class="nav-right">
-                    <div class="img-ctn"> profile </div>
+                    <a class="img-ctn"> <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Info Icon" id="nav-icon"> </a>
                 </div>
             </div>
         </div>
@@ -38,8 +38,12 @@
                                     <p id= "file_name">{{ file_info.name }}</p>
                                 </div>
                                 <div class="file_info_right">
-                                    <p id="file_size"> {{ file_info.size }} </p>
-                                    <a href="{{ url_for('download_file', filename=file_info.path) }}" class="download-button">Download</a>
+                                    <div class="file_size_container">
+                                        <p id="file_size"> {{ file_info.size }} </p>
+                                    </div>
+                                    <a href="{{ url_for('download_file', filename=file_info.path) }}" class="download-button"> 
+                                        <img src="{{ url_for('static', filename='img/download.svg') }}" alt="Download Icon">
+                                    </a>
                                 </div>
                             {% endif %}
                         </div>

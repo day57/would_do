@@ -89,6 +89,7 @@
     flex-direction: row;
     width: 100%;
     justify-content:space-between;
+    align-content: center;
 
     background-color: var(--backgorund-color);
     border-radius: 6px 6px 0 0;
@@ -99,20 +100,33 @@
 
 .file_info_left {
     padding: 6px;
+    display: flex;
+    justify-content: right;
+ 
 }
 
 .file_info_right {
     padding: 6px;
     display: flex;
-    justify-content: row;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
 }
 
 #file_name {
-    
+   margin: auto;
 }
 
+.file_size_container {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+}
 #file_size {
     margin: 0 3px 0 0;
+   
 }
 
 #download_button {
