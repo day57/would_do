@@ -2,10 +2,10 @@
 
 body{ margin: 2px; }
 
-ul{
+#tree{
     margin: 0px 0px 0px 20px; 
     color: var(--text-color);
-    list-style: none; line-height: 2em; font-family: Arial;
+    list-style: none; line-height: 2em; font-family: 'Roboto', sans-serif;
     li{
         font-size: 16px;
         position: relative;
@@ -64,7 +64,7 @@ ul {
   margin: 0 0 0 20px; 
   list-style: none; 
   line-height: 2em; 
-  font-family: Arial;
+  font-family: 'Roboto', sans-serif;
 }
 
 li {
@@ -119,6 +119,7 @@ input[type="checkbox"]:checked + label + ul {
 
 label {
   cursor: pointer;
+  color: var(--text-color);
 }
 
 label > img {

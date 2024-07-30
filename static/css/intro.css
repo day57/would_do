@@ -1,0 +1,15 @@
+.intro-container {
+    padding:10px;
+}
+.intro-container h1 {
+    text-align: center;
+}
+
+.intro-container h4 {
+    text-align: center;
+}
+
+.intro-container ol {
+    margin: 10px;
+}
+

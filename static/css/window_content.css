@@ -1,3 +1,7 @@
+.tree-and-content-container {
+    display: flex;
+    flex-direction: row;
+}
 .content_background {
     background-color: white;
     border-radius: 0px 0px 6px 6px;
