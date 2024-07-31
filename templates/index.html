@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.js') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/directory.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/window_content.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/intro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <title>Create User</title>
+</head>
+<body>
+    <div class="main">
+        <div class="main-content">
+            <div class="main-content-container">
+                <div class="nav">
+                    <div class="nav-container">
+                        <div class="nav-left">
+                            <a class="img-ctn" id="nav-one"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"> </a>
+                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"></a>
+                        </div>
+                        <div class="nav-right">
+                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Profile Icon" id="nav-icon"> </a>
+                        </div>
+                    </div>
+                </div>
+                <h1>Welcome to the User Creation Page</h1>
+                <form action="/create_user" method="post">
+                    <button type="submit">Create User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

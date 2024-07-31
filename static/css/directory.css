@@ -1,6 +1,10 @@
 *{ margin: 0px; padding: 0px; }
 
-body{ margin: 2px; }
+.directory-tree{
+  min-width: 21vw;
+  padding: 10px 0 10px 10px;
+  border-right: 1px solid var(--link-color); 
+}
 
 #tree{
     margin: 0px 0px 0px 20px; 

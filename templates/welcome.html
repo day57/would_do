@@ -9,45 +9,47 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/window_content.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/intro.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-
+    <title>Welcome</title>
 </head>
-
 <body>
     <div class="main">
-        
-        <div class= "main-content">
+        <div class="main-content">
             <div class="main-content-container">
-                <div class = "nav">
+                <div class="nav">
                     <div class="nav-container">
                         <div class="nav-left">
                             <a class="img-ctn" id="nav-one"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"> </a>
                             <a class="img-ctn"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"></a>
                         </div>
                         <div class="nav-right">
-                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Info Icon" id="nav-icon"> </a>
+                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Profile Icon" id="nav-icon"> </a>
                         </div>
                     </div>
                 </div>
+                <h1>Welcome Back!</h1>
+                <p>Your User ID: {{ user_id }}</p>
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <input type="file" name="file">
+                    <button type="submit">Upload File</button>
+                </form>
                 <div class="tree-and-content-container">
                     <div class="directory-tree">
                         {{ directory_tree_html | safe }}
                     </div>
-                
                     <div class="window-content-container">
                         <div class="window-content">
                             <div class="window-content-header">
                                 <!-- File information will be dynamically inserted here -->
                                 {% if file_info %}
                                     <div class="file_info_left">
-                                        <p id= "file_name">{{ file_info.name }}</p>
+                                        <p id="file_name">{{ file_info.name }}</p>
                                     </div>
                                     <div class="file_info_right">
                                         <div class="file_size_container">
-                                            <p id="file_size"> {{ file_info.size }} </p>
+                                            <p id="file_size">{{ file_info.size }}</p>
                                         </div>
-                                        <a href="{{ url_for('download_file', filename=file_info.path) }}" class="download-button"> 
+                                        <a href="{{ url_for('download_file', filename=file_info.path) }}" class="download-button">
                                             <img src="{{ url_for('static', filename='img/download.svg') }}" alt="Download Icon">
                                         </a>
                                     </div>
@@ -59,42 +61,29 @@
                                     {{ content | safe }}
                                 {% else %}
                                     <div class="intro-container">
-                                        <h1> Welcome to the File Explorer App! </h1>
-                                        <h4> This application allows you to navigate through a directory structure and view various types of files directly in your browser. Here's what you can do: </h4>
+                                        <h1>Welcome to the File Explorer App!</h1>
+                                        <h4>This application allows you to navigate through a directory structure and view various types of files directly in your browser. Here's what you can do:</h4>
                                         <ol id="intro-list">
-                                            <li>
-                                                <b>Browse Directories</b>: Navigate through folders and subfolders to find the files you need.
-                                            </li>
-                                            <li>
-                                                <b>View Files</b>: Click on a file to view its content. Supported file types include images (PNG, JPG, GIF, SVG), videos (MP4, AVI), and various text-based files (TXT, PY, JS, HTML, CSS, CPP, MD).
-                                            </li>
-                                            <li>
-                                                <b>Download Files</b>: Download any file by clicking the download button provided.
-                                            </li>
+                                            <li><b>Browse Directories</b>: Navigate through folders and subfolders to find the files you need.</li>
+                                            <li><b>View Files</b>: Click on a file to view its content. Supported file types include images (PNG, JPG, GIF, SVG), videos (MP4, AVI), and various text-based files (TXT, PY, JS, HTML, CSS, CPP, MD).</li>
+                                            <li><b>Download Files</b>: Download any file by clicking the download button provided.</li>
                                         </ol>
                                         <form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data">
-                                            <input type="file" name="upload" accept=".zip,.txt,.pdf,.png,.jpg,.jpeg,.gif" required>
+                                            <input type="file" name="file" required>
                                             <button type="submit">Upload</button>
                                         </form>
-                                        
                                     </div>
                                 {% endif %}
-
                             </div>
-                        
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="footer">
-                <p> hi </p>
+                <form action="/logout" method="get">
+                    <button type="submit">Log Out</button>
+                </form>
             </div>
         </div>
     </div>
-    
-    <noscript>
-        <strong>JavaScript is disabled on your browser.</strong>
-    </noscript>
-    <script src="script.js"></script>
 </body>
 </html>
+

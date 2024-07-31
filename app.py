@@ -1,78 +1,118 @@
-from flask import Flask, render_template, send_from_directory, url_for
-from werkzeug.utils import safe_join
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, make_response
+from werkzeug.utils import secure_filename, safe_join
+from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
+import uuid
 import os
 
-def create_app():
-    app = Flask(__name__)
-    UPLOAD_FOLDER = 'uploads'  # Directory for uploaded files
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['MAX_CONTENT_PATH'] = 1000000  # Max file size, adjust as needed
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SECRET_KEY'] = 'supersecretkey'  # Use a strong secret key
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Function to get directory data in a tree structure
-    def get_directory_data():
-        return build_directory_tree(app.config['UPLOAD_FOLDER'])
+db = SQLAlchemy(app)
+Session(app)
 
-    # Function to build a directory tree structure
-    def build_directory_tree(folder_path):
-        tree = {}
-        for root, dirs, files in os.walk(folder_path):
-            folder_structure = tree
-            relative_path = os.path.relpath(root, folder_path)
-            if relative_path != ".":
-                for part in relative_path.split(os.sep):
-                    if part not in folder_structure:
-                        folder_structure[part] = {}
-                    folder_structure = folder_structure[part]
-            for file in files:
-                folder_structure[file] = os.path.join(relative_path, file).replace("\\", "/")
-        return tree
+# Ensure the shared upload folder exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-    # Function to convert the directory tree structure to HTML
-    def directory_tree_to_html(tree, parent_id="", is_root=False):
-        html = '<ul class="tree">'
-        if is_root:
-            html += '<li class="root"><input type="checkbox" id="root-folder" hidden>'
-            html += '<label for="root-folder"><a href="/">uploads /</a></label>'
-        
-        has_content = False  # Flag to check if there are any directories or files
+class User(db.Model):
+    id = db.Column(db.String(36), primary_key=True)  # UUIDs are 36 chars long
+    files = db.relationship('File', backref='user', lazy=True)
 
-        #where we are viisually making the tree items
-        for name, subtree in tree.items():
-            has_content = True  # Set flag to True if there is content
-            if isinstance(subtree, str):
-                file_path = subtree.replace("\\", "/")
-                html += f'<li><a href="{url_for("view_file", filename=file_path)}">{name}</a></li>'
-            else:
-                dir_id = os.path.join(parent_id, name).replace("\\", "-").replace("/", "-")
-                html += f'<li><input type="checkbox" id="{dir_id}" hidden>'
-                html += f'<label for="{dir_id}">{name} /</label>'
-                html += directory_tree_to_html(subtree, os.path.join(parent_id, name))
-                html += '</li>'
-        
-        html += '</ul>'
-        return html
+    def __repr__(self):
+        return f"User('{self.id}')"
 
-    # Function to format file size into a readable string
-    def readable_file_size(size):
-        for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
-            if size < 1024:
-                return f"{size:.2f} {unit}"
-            size /= 1024
+class File(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    size = db.Column(db.Integer, nullable=False)
+    path = db.Column(db.String(120), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
 
-    # Route for the home page
-    @app.route('/')
-    def home():
-        tree = get_directory_data()
-        tree_html = directory_tree_to_html(tree, is_root=True)
-        
-        # Check if the root directory is empty
-        is_root_empty = not any(tree)
-        
-        return render_template('home.html', directory_tree_html=tree_html, content='', file_info=None, is_root_empty=is_root_empty)
+    def __repr__(self):
+        return f"File('{self.name}', '{self.size}', '{self.path}', '{self.user_id}')"
 
-    # Route to view a specific file
-    @app.route('/view/<path:filename>')
-    def view_file(filename):
-        file_path = safe_join(app.config['UPLOAD_FOLDER'], filename)
+def save_file(file, user_id):
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
+    return filename, os.path.getsize(file_path), file_path
+
+@app.before_request
+def before_request():
+    if not hasattr(app, 'db_initialized'):
+        with app.app_context():
+            db.create_all()
+        app.db_initialized = True
+
+@app.route('/')
+def index():
+    user_id = session.get('user_id')
+    if not user_id:
+        return render_template('index.html')
+    else:
+        user = User.query.get(user_id)
+        files = File.query.filter_by(user_id=user_id).all()
+        directory_tree_html = build_directory_tree_html(files)
+        return render_template('welcome.html', user_id=user_id, directory_tree_html=directory_tree_html, file_info=None, content=None)
+
+@app.route('/create_user', methods=['POST'])
+def create_user():
+    user_id = session.get('user_id')
+    if not user_id:
+        user_id = str(uuid.uuid4())
+        session['user_id'] = user_id
+        new_user = User(id=user_id)
+        db.session.add(new_user)
+        db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('index'))
+
+    if 'file' not in request.files:
+        return redirect(url_for('index'))
+    file = request.files['file']
+    if file.filename == '':
+        return redirect(url_for('index'))
+    filename, size, file_path = save_file(file, user_id)
+    new_file = File(name=filename, size=size, path=file_path, user_id=user_id)
+    db.session.add(new_file)
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('index'))
+
+@app.route('/files/<filename>')
+def files(filename):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('index'))
+    file = File.query.filter_by(name=filename, user_id=user_id).first()
+    if file:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    else:
+        return "File not found", 404
+
+@app.route('/view/<path:filename>')
+def view_file(filename):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('index'))
+    
+    file = File.query.filter_by(name=filename, user_id=user_id).first()
+    if file:
+        file_path = file.path
         if os.path.exists(file_path):
             file_info = {
                 "name": os.path.basename(file_path),
@@ -93,29 +133,40 @@ def create_app():
             else:
                 content = "<div><p>Unsupported file format</p></div>"
             
-            tree = get_directory_data()
-            tree_html = directory_tree_to_html(tree, is_root=True)
+            user = User.query.get(user_id)
+            files = File.query.filter_by(user_id=user_id).all()
+            directory_tree_html = build_directory_tree_html(files)
             
-            return render_template('home.html', content=content, file_info=file_info, directory_tree_html=tree_html, is_root_empty=False)
+            return render_template('welcome.html', content=content, file_info=file_info, directory_tree_html=directory_tree_html, is_root_empty=False)
         else:
             return "File not found", 404
+    else:
+        return "File not found", 404
 
-    # Route to serve static files
-    @app.route('/files/<path:filename>')
-    def files(filename):
-        file_path = safe_join(app.config['UPLOAD_FOLDER'], filename)
-        if os.path.exists(file_path):
-            return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-        else:
-            return "File not found", 404
-
-    # Route to download a specific file
-    @app.route('/download/<path:filename>')
-    def download_file(filename):
+@app.route('/download/<path:filename>')
+def download_file(filename):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('index'))
+    file = File.query.filter_by(name=filename, user_id=user_id).first()
+    if file:
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+    else:
+        return "File not found", 404
 
-    return app
+def build_directory_tree_html(files):
+    tree_html = '<ul>'
+    for file in files:
+        tree_html += f'<li><a href="{url_for("view_file", filename=file.name)}">{file.name}</a></li>'
+    tree_html += '</ul>'
+    return tree_html
 
-if __name__ == "__main__":
-    app = create_app()
+def readable_file_size(size):
+    # Helper function to convert file size into a readable format
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if size < 1024:
+            return f"{size:.2f} {unit}"
+        size /= 1024
+
+if __name__ == '__main__':
     app.run(debug=True)

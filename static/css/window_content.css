@@ -1,23 +1,29 @@
 .tree-and-content-container {
     display: flex;
     flex-direction: row;
+   
+    height:75vh;
+    width: 100%;
 }
 .content_background {
     background-color: white;
     border-radius: 0px 0px 6px 6px;
+    height: 100%;
 }
 
 .content_background  img {
-    max-height: 700px; /* or any specific height */
+    max-height: 100%; /* or any specific height */
     overflow-y: auto; /* Enables vertical scrolling */
     overflow-x: hidden; /* Hides horizontal scrolling */
+    background-size: contain;
     
 
 }
 
 .window-content {
     width: 100%;
-    min-height: auto; /* Set a fixed height or max-height */
+    
+    ; /* Set a fixed height or max-height */
     justify-self: center;
     align-self: center;
     display: flex;
@@ -25,14 +31,14 @@
     overflow-y: auto; /* Enables vertical scrolling */
     overflow-x: hidden; /* Hides horizontal scrolling */
 
-    
+    border-radius: 6px;
 
     scrollbar-width: 3px;
     scroll-behavior: smooth;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     
 
-  
+  margin-bottom: 30px;
 }
 
 /* window-content-container scroll
@@ -66,11 +72,6 @@
 }
 
 
-
-
-
-
-
 .window-content-container {
     padding: 10px;
     height: 100%;
@@ -78,14 +79,12 @@
 
     overflow-y: scroll;
     color: var(--text-color);
-}
-
-
-
-.window-content-container{
     -ms-overflow-style:none;
     scrollbar-width: none;
+    min-height: 100%;
 }
+
+
 
 
 .window-content-header {
@@ -139,7 +138,7 @@
 
 pre {
     padding: 6px;
-    max-height: 600px; /* or any specific height */
+    max-height: 100%; /* or any specific height */
     overflow-y: auto; /* Enables vertical scrolling */
     overflow-x: auto; /* Hides horizontal scrolling */
 }
