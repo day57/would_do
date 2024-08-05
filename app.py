@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, make_response
 from werkzeug.utils import secure_filename, safe_join
 from flask_session import Session
@@ -5,15 +6,17 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import uuid
 import os
+from dotenv import load_dotenv
 
 # configuration
+load_dotenv()  # Load environment variables from a .env file
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
 app.config['MAX_CONTENT_PATH'] = 1000000  # Max file size, adjust as needed
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SECRET_KEY'] = 'supersecretkey'  # Use a strong secret key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -23,15 +26,16 @@ Session(app)
 # Ensure the shared upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True)  # UUIDs are 36 chars long
     files = db.relationship('File', backref='user', lazy=True)
-    
-    # time created
-    # limit on how much data the user can upload after each file upload this will be updated
-    
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    upload_limit = db.Column(db.Integer, nullable=False, default=1000000)  # Default upload limit in bytes
+
     def __repr__(self):
-        return f"User('{self.id}')"
+        return f"<User(id='{self.id}')>"
+
 
 class File(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -39,28 +43,32 @@ class File(db.Model):
     size = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
-    token = db.Column(db.String(36), unique=True, nullable=False)  # Unique token for each file
-
-    # user downloads
-    # verified 
-    # download path
-    # time uploaded 
-    # file active time 
-
+    token = db.Column(db.String(36), unique=True, nullable=False)
+    downloads = db.Column(db.Integer, default=0)
+    verified = db.Column(db.Boolean, default=False)
+    download_path = db.Column(db.String(120))
+    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    active_until = db.Column(db.DateTime)
 
     def __repr__(self):
-        return f"File('{self.name}', '{self.size}', '{self.path}', '{self.user_id}', '{self.token}')"
+        return f"<File(name='{self.name}', size='{self.size}', path='{self.path}', user_id='{self.user_id}', token='{self.token}')>"
 
 def generate_token():
     return str(uuid.uuid4())
 
-def save_file(file, user_id):
+def save_file(file, user_id, token):
     filename = secure_filename(file.filename)
     user_folder = os.path.join(app.config['UPLOAD_FOLDER'], user_id)
     os.makedirs(user_folder, exist_ok=True)
     file_path = os.path.join(user_folder, filename)
     file.save(file_path)
-    return filename, os.path.getsize(file_path), file_path
+
+    # Save file metadata in the database with the token
+    new_file = File(name=filename, size=os.path.getsize(file_path), path=file_path, user_id=user_id, token=token)
+    db.session.add(new_file)
+    db.session.commit()
+    return filename, os.path.getsize(file_path), file_path  # Return these values if needed elsewhere
+
 
 @app.before_request
 def before_request():
@@ -97,18 +105,18 @@ def upload():
     if not user_id:
         return redirect(url_for('index'))
 
-    if 'file' not in request.files:
-        return redirect(url_for('index'))
     file = request.files['file']
-    if file.filename == '':
+    if not file or file.filename == '':
         return redirect(url_for('index'))
-    filename, size, file_path = save_file(file, user_id)
-    token = generate_token()
-    new_file = File(name=filename, size=size, path=file_path, user_id=user_id, token=token)
-    db.session.add(new_file)
-    db.session.commit()
-    return redirect(url_for('index'))
 
+    token = generate_token()  # Generate a unique token for the file before saving it
+    if not token:
+        return "Failed to generate a unique token for the file", 400
+
+    # Save the file with the generated token
+    filename, size, file_path = save_file(file, user_id, token)
+    
+    return redirect(url_for('index'))
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
@@ -132,8 +140,10 @@ def view_file(token):
                 "name": os.path.basename(file_path),
                 "size": readable_file_size(os.path.getsize(file_path)),
                 "type": file.name.rsplit('.', 1)[1].lower(),
-                "path": file.name
+                "path": file.name,
+                "token": file.token  # Ensure this is added to pass to the template
             }
+
             file_type = file_info["type"]
             if file_type in ['png', 'jpg', 'jpeg', 'gif', 'svg']:
                 content = f"<img src='{url_for('files', token=token)}' alt='{file.name}'>"
@@ -169,7 +179,7 @@ def build_directory_tree_html(files):
     html += '<li class="root"><input type="checkbox" id="root-folder" hidden>'
     html += '<label for="root-folder"><a href="/">uploads /</a></label>'
     for file in files:
-        html += f"<li id=tree_li><a href='/view/{file.token}'>{file.name}</a> - <a href='/download/{file.token}' class='download-button'>Download</a></li>"
+        html += f"<li id=tree_li><a href='/view/{file.token}'>{file.name}</a></li>"
     html += "</ul>"
     return html
     
