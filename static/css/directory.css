@@ -10,7 +10,7 @@
     margin: 0px 0px 0px 20px; 
     color: var(--text-color);
     list-style: none; line-height: 2em; font-family: 'Roboto', sans-serif;
-    li{
+    #tree_li{
         font-size: 16px;
         position: relative;
         &:before{

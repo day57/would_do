@@ -102,6 +102,9 @@ a img {
 
 .nav-right {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
     margin-right: 10px;
 
 }

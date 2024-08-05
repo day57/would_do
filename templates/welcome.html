@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/intro.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <title>Welcome</title>
+    <title> App Main </title>
 </head>
 <body>
     <div class="main">
@@ -23,15 +23,13 @@
                             <a class="img-ctn"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"></a>
                         </div>
                         <div class="nav-right">
+                            <p>Your User ID: {{ user_id }}</p>
                             <a class="img-ctn"> <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Profile Icon"> </a>
                         </div>
                     </div>
                 </div>
-                <p>Your User ID: {{ user_id }}</p>
-                <form action="/upload" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file">
-                    <button type="submit">Upload</button>
-                </form>
+              
+                
                 <div class="tree-and-content-container">
                     <div class="directory-tree">
                         {{ directory_tree_html | safe }}
@@ -60,26 +58,19 @@
                                     <div class="intro-container">
                                         <h1> Welcome to the File Explorer App! </h1>
                                         <h4> This application allows you to navigate through a directory structure and view various types of files directly in your browser. Here's what you can do: </h4>
-                                        <ol id="intro-list">
-                                            <li>
-                                                <b>Browse Directories</b>: Navigate through folders and subfolders to find the files you need.
-                                            </li>
-                                            <li>
-                                                <b>View Files</b>: Click on a file to view its content. Supported file types include images (PNG, JPG, GIF, SVG), videos (MP4, AVI), and various text-based files (TXT, PY, JS, HTML, CSS, CPP, MD).
-                                            </li>
-                                            <li>
-                                                <b>Download Files</b>: Download any file by clicking the download button provided.
-                                            </li>
-                                        </ol>
+                                        <form action="/upload" method="post" enctype="multipart/form-data">
+                                            <input type="file" name="file" >
+                                            <button type="submit">Upload</button>
+                                        </form>
                                     </div>
                                 {% endif %}
                             </div>
+                            
                         </div>
                     </div>
                 </div>
-                <div class="footer">
-                    <p> hi </p>
-                </div>
+                <a href="{{ url_for('logout')}}" class="download-button"> <button> logout </button></a>
+               
             </div>
         </div>
     </div>

@@ -6,6 +6,8 @@ from flask_migrate import Migrate
 import uuid
 import os
 
+# configuration
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_PATH'] = 1000000  # Max file size, adjust as needed
@@ -24,7 +26,10 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True)  # UUIDs are 36 chars long
     files = db.relationship('File', backref='user', lazy=True)
-
+    
+    # time created
+    # limit on how much data the user can upload after each file upload this will be updated
+    
     def __repr__(self):
         return f"User('{self.id}')"
 
@@ -35,6 +40,13 @@ class File(db.Model):
     path = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     token = db.Column(db.String(36), unique=True, nullable=False)  # Unique token for each file
+
+    # user downloads
+    # verified 
+    # download path
+    # time uploaded 
+    # file active time 
+
 
     def __repr__(self):
         return f"File('{self.name}', '{self.size}', '{self.path}', '{self.user_id}', '{self.token}')"
@@ -66,7 +78,7 @@ def index():
         user = User.query.get(user_id)
         files = File.query.filter_by(user_id=user_id).all()
         directory_tree_html = build_directory_tree_html(files)
-        return render_template('welcome.html', user_id=user_id, directory_tree_html=directory_tree_html, file_info=None, content=None)
+        return render_template('files.html', user_id=user_id, directory_tree_html=directory_tree_html, file_info=None, content=None)
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
@@ -138,7 +150,7 @@ def view_file(token):
             files = File.query.filter_by(user_id=session.get('user_id')).all()
             directory_tree_html = build_directory_tree_html(files)
             
-            return render_template('welcome.html', user_id=session.get('user_id'), content=content, file_info=file_info, directory_tree_html=directory_tree_html, is_root_empty=False)
+            return render_template('files.html', user_id=session.get('user_id'), content=content, file_info=file_info, directory_tree_html=directory_tree_html, is_root_empty=False)
         else:
             return "File not found", 404
     else:
@@ -154,11 +166,13 @@ def download_file(token):
 
 def build_directory_tree_html(files):
     html = "<ul class='tree'>"
+    html += '<li class="root"><input type="checkbox" id="root-folder" hidden>'
+    html += '<label for="root-folder"><a href="/">uploads /</a></label>'
     for file in files:
-        html += f"<li><a href='/view/{file.token}'>{file.name}</a> - <a href='/download/{file.token}' class='download-button'>Download</a></li>"
+        html += f"<li id=tree_li><a href='/view/{file.token}'>{file.name}</a> - <a href='/download/{file.token}' class='download-button'>Download</a></li>"
     html += "</ul>"
     return html
-
+    
 def readable_file_size(size):
     # Convert file size to a readable format
     for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
