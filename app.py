@@ -56,6 +56,10 @@ class File(db.Model):
 def generate_token():
     return str(uuid.uuid4())
 
+def get_file_types():
+    allowed_file_types = os.getenv('ALLOWED_FILE_TYPES', 'jpg, png, pdf, docx').split(', ')
+    return allowed_file_types
+
 def save_file(file, user_id, token):
     filename = secure_filename(file.filename)
     user_folder = os.path.join(app.config['UPLOAD_FOLDER'], user_id)

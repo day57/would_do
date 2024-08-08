@@ -23,8 +23,8 @@
                             <a class="img-ctn"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"></a>
                         </div>
                         <div class="nav-right">
-                            <p>User ID: {{ user_id }}</p>
-                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Profile Icon"> </a>
+                            <p class="nav-right-text">User ID: {{ user_id }}</p>
+                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/user-profile.svg') }}" alt="Profile Icon"> </a>
                         </div>
                     </div>
                 </div>
@@ -56,12 +56,17 @@
                                     {{ content | safe }}
                                 {% else %}
                                     <div class="intro-container">
-                                        <h1> Welcome to the File Explorer App! </h1>
-                                        <h4> This application allows you to navigate through a directory structure and view various types of files directly in your browser. Here's what you can do: </h4>
-                                        <form action="/upload" method="post" enctype="multipart/form-data">
-                                            <input type="file" name="file" >
-                                            <button type="submit">Upload</button>
-                                        </form>
+                                        <div class="welcome-top-container">
+                                            <h1>Welcome to the File Explorer App</h1>
+                                            <p>Seamlessly navigate and manage your documents. Upload new files with a simple drag and drop or by clicking the upload button.</p>
+                                            <p>Supported file formats include: .jpg, .png, .pdf, .docx. Ensure your files match these formats to successfully upload.</p>
+                                        </div>
+                                        <div class="welcome-bottom-container">
+                                            <form action="/upload" method="post" enctype="multipart/form-data" id="file-upload-form">
+                                                <input type="file" name="file" id="file-input" accept=".jpg, .png, .pdf, .docx" multiple>
+                                                <button type="submit">Upload File</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 {% endif %}
                             </div>
@@ -71,15 +76,15 @@
                 </div>
                 
             </div>
-            <div class="footer">
-                <ul>
-                    <li> About </li>
-                    <li> Terms </li>
-                    <li> Copywright </li>
-                    <li> FAQ </li>
-                    <li> Abuse </li>
-                    <li> Feedback </li>
-                    <li><a href="{{ url_for('logout')}}" class="download-button"> <button> logout </button></a></li>
+            <div class="footer" >
+                <ul id="footer-list">
+                    <li id="footer-item"><a href="/"> About </a></li>
+                    <li id="footer-item"><a href="/"> Terms </a></li>
+                    <li id="footer-item"><a href="/"> Copywright </a></li>
+                    <li id="footer-item"><a href="/"> FAQ </a></li>
+                    <li id="footer-item"><a href="/"> Abuse </a></li>
+                    <li id="footer-item" ><a href="/"> Feedback </a></li>
+                    <li id="footer-item"><a href="{{ url_for('logout')}}" > Logout </a></li>
 
                 </ul>
             </div>

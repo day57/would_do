@@ -1,7 +1,15 @@
 .intro-container {
     padding:10px;
-    
+    height: 95%;
+   
+    align-self: center;
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
 }
+
 .intro-container h1 {
     text-align: center;
 }
@@ -14,3 +22,11 @@
     margin: 10px;
 }
 
+
+.welcome-top-container {
+
+}
+
+.welcome-bottom-container {
+
+}

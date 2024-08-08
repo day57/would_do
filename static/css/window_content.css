@@ -9,6 +9,7 @@
     background-color: white;
     border-radius: 0px 0px 6px 6px;
     height: 100%;
+    display: flex;
 }
 
 .content_background  img {
@@ -22,8 +23,8 @@
 
 .window-content {
     width: 100%;
-    
-    ; /* Set a fixed height or max-height */
+    height: 95%;
+    /* Set a fixed height or max-height */
     justify-self: center;
     align-self: center;
     display: flex;
@@ -73,7 +74,7 @@
 
 
 .window-content-container {
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
     height: 100%;
     width: 100%;
 
