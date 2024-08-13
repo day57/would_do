@@ -1,19 +1,20 @@
 from datetime import datetime
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, make_response
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, flash
 from werkzeug.utils import secure_filename, safe_join
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from datetime import datetime, timedelta
 import uuid
 import os
 from dotenv import load_dotenv
 
 # configuration
-load_dotenv()  # Load environment variables from a .env file
+load_dotenv()
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
-app.config['MAX_CONTENT_PATH'] = 1000000  # Max file size, adjust as needed
+app.config['MAX_CONTENT_LENGTH'] = 5400 * 1024 * 1024  # 5400 MB in bytes
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
@@ -60,17 +61,28 @@ def get_file_types():
     allowed_file_types = os.getenv('ALLOWED_FILE_TYPES', 'jpg, png, pdf, docx').split(', ')
     return allowed_file_types
 
-def save_file(file, user_id, token):
+def save_file(file, user_id, token, expiration_days):
     filename = secure_filename(file.filename)
     user_folder = os.path.join(app.config['UPLOAD_FOLDER'], user_id)
     os.makedirs(user_folder, exist_ok=True)
     file_path = os.path.join(user_folder, filename)
     file.save(file_path)
 
-    # Save file metadata in the database with the token
-    new_file = File(name=filename, size=os.path.getsize(file_path), path=file_path, user_id=user_id, token=token)
+    # Calculate the expiration date
+    active_until = datetime.utcnow() + timedelta(days=expiration_days)
+
+    # Save file metadata in the database with the token and expiration date
+    new_file = File(
+        name=filename,
+        size=os.path.getsize(file_path),
+        path=file_path,
+        user_id=user_id,
+        token=token,
+        active_until=active_until
+    )
     db.session.add(new_file)
     db.session.commit()
+
     return filename, os.path.getsize(file_path), file_path  # Return these values if needed elsewhere
 
 
@@ -80,6 +92,19 @@ def before_request():
         with app.app_context():
             db.create_all()
         app.db_initialized = True
+
+
+def delete_expired_files():
+    now = datetime.utcnow()
+    expired_files = File.query.filter(File.active_until < now).all()
+    for file in expired_files:
+        try:
+            os.remove(file.path)
+        except OSError:
+            pass
+        db.session.delete(file)
+    db.session.commit()
+
 
 @app.route('/')
 def index():
@@ -109,18 +134,21 @@ def upload():
     if not user_id:
         return redirect(url_for('index'))
 
-    file = request.files['file']
-    if not file or file.filename == '':
+    if 'file' not in request.files or 'expiration' not in request.form:
         return redirect(url_for('index'))
 
-    token = generate_token()  # Generate a unique token for the file before saving it
-    if not token:
-        return "Failed to generate a unique token for the file", 400
+    file = request.files['file']
+    if file.filename == '':
+        return redirect(url_for('index'))
 
-    # Save the file with the generated token
-    filename, size, file_path = save_file(file, user_id, token)
+    # Get the selected expiration time from the form
+    expiration_days = int(request.form.get('expiration', 1))  # Default to 1 day if not specified
+
+    token = generate_token()
+    filename, size, file_path = save_file(file, user_id, token, expiration_days)
     
     return redirect(url_for('index'))
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
@@ -181,7 +209,7 @@ def download_file(token):
 def build_directory_tree_html(files):
     html = "<ul class='tree'>"
     html += '<li class="root"><input type="checkbox" id="root-folder" hidden>'
-    html += '<label for="root-folder"><a href="/">uploads /</a></label>'
+    html += '<label for="root-folder"><a href="/">uploads /</a></label> <button id="uploadBtn">Upload File</button>'
     for file in files:
         html += f"<li id=tree_li><a href='/view/{file.token}'>{file.name}</a></li>"
     html += "</ul>"

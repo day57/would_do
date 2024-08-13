@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='app.js') }}">
+ 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/directory.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/window_content.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/intro.css') }}">
@@ -58,10 +58,8 @@
                                     <div class="intro-container">
                                         <h1> Welcome to the File Explorer App! </h1>
                                         <h4> This application allows you to navigate through a directory structure and view various types of files directly in your browser. Here's what you can do: </h4>
-                                        <form action="/upload" method="post" enctype="multipart/form-data">
-                                            <input type="file" name="file" >
-                                            <button type="submit">Upload</button>
-                                        </form>
+                           
+                                        
                                     </div>
                                 {% endif %}
                             </div>
