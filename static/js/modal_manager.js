@@ -19,47 +19,46 @@ function closeModal(modalId) {
 // JavaScript to handle deletion with confirmation
 function confirmDelete(token) {
     if (confirm("Are you sure you want to delete this file?")) {
-        // Assuming you have a route set up to handle the deletion
         fetch(`/delete/${token}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert("File deleted successfully.");
-                    // Optionally close the modal and update the UI accordingly
-                    closeModal('editModal');
-                    // Update the UI or redirect as needed
+                    window.location.href = '/'; // Redirect to the home route after deletion
                 } else {
-                    alert("Failed to delete file.");
+                    alert(data.message); // Show the error message from the server
                 }
             })
-            .catch(error => console.error('Error deleting file:', error));
+            .catch(error => {
+                console.error('Error deleting file:', error);
+                alert("Error occurred while deleting file.");
+            });
     }
 }
 
 
-// Adding event listeners to upload buttons
-document.querySelectorAll("#uploadBtn").forEach(btn => {
-    btn.addEventListener('click', () => openModal('uploadModal'));
-});
+// Attach event listeners
+document.addEventListener('DOMContentLoaded', function () {
+    const uploadBtns = document.querySelectorAll("#uploadBtn");
+    uploadBtns.forEach(btn => {
+        btn.addEventListener('click', () => openModal('uploadModal'));
+    });
 
-document.getElementById("editBtn").addEventListener('click', function() {
-    openModal('editModal');
-});
+    const editBtns = document.querySelectorAll("#editBtn");
+    editBtns.forEach(btn => {
+        btn.addEventListener('click', () => openModal('editModal'));
+    });
 
+    const closeButtons = document.querySelectorAll(".close");
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            closeModal(this.closest('.modal').id);
+        });
+    });
 
-// Adding event listeners to close buttons within modals
-document.querySelectorAll(".close").forEach(closeBtn => {
-    closeBtn.addEventListener('click', () => {
-        const modal = closeBtn.closest('.modal');
-        if (modal) {
-            closeModal(modal.id);
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            closeModal(event.target.id);
         }
     });
-});
-
-// Handling click outside of any modal content to close it
-window.addEventListener('click', event => {
-    if (event.target.classList.contains('modal')) {
-        closeModal(event.target.id);
-    }
 });

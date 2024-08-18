@@ -77,16 +77,12 @@
     padding: 10px 10px 0px 10px;
     height: 100%;
     width: 100%;
-
-    overflow-y: scroll;
+    overflow-y: hidden;
     color: var(--text-color);
     -ms-overflow-style:none;
     scrollbar-width: none;
     min-height: 100%;
 }
-
-
-
 
 .window-content-header {
     display: flex;
@@ -148,8 +144,6 @@ pre {
 
 code {
     width: 100%;
-
-    
 }
 
 

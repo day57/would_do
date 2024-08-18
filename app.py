@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, flash
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, flash, jsonify
 from werkzeug.utils import secure_filename, safe_join
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import uuid
 import os
 from dotenv import load_dotenv
+
 
 # configuration
 load_dotenv()
@@ -86,6 +87,23 @@ def save_file(file, user_id, token, expiration_days):
     return filename, os.path.getsize(file_path), file_path  # Return these values if needed elsewhere
 
 
+
+
+@app.route('/delete/<token>', methods=['POST'])
+def delete_file(token):
+    file = File.query.filter_by(token=token).first()
+    if file:
+        try:
+            os.remove(file.path)
+            db.session.delete(file)
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'File deleted successfully.'}), 200
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)}), 500
+    return jsonify({'success': False, 'message': 'File not found.'}), 404
+
+
+
 @app.before_request
 def before_request():
     if not hasattr(app, 'db_initialized'):
@@ -113,7 +131,7 @@ def index():
         return render_template('index.html')
     else:
         user = User.query.get(user_id)
-        files = File.query.filter_by(user_id=user_id).all()
+        files = user.files  # Assuming the relationship is set to load the files
         directory_tree_html = build_directory_tree_html(files)
         return render_template('files.html', user_id=user_id, directory_tree_html=directory_tree_html, file_info=None, content=None)
 
@@ -209,7 +227,7 @@ def download_file(token):
 def build_directory_tree_html(files):
     html = "<ul class='tree'>"
     html += '<li class="root"><input type="checkbox" id="root-folder" hidden>'
-    html += '<label for="root-folder"><a href="/">uploads /</a></label> <button id="uploadBtn">Upload File</button>'
+    html += '<label for="root-folder"><a href="/">uploads/</a></label> <button id="uploadBtn">Upload File</button>'
     for file in files:
         html += f"<li id=tree_li><a href='/view/{file.token}'>{file.name}</a></li>"
     html += "</ul>"

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modals/edit_file.css') }}">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <title> App Main </title>
+    <title> File view </title>
 </head>
 <body>
     <div class="main">
@@ -32,7 +32,6 @@
                     </div>
                 </div>
               
-                
                 <div class="tree-and-content-container">
                     <div class="directory-tree">
                         {{ directory_tree_html | safe }}
@@ -77,9 +76,9 @@
                             
                         </div>
                     </div>
-                </div>
-                
+                </div>   
             </div>
+            
             <div class="footer" >
                 <ul id="footer-list">
                     <li id="footer-item"><a href="/"> About </a></li>
@@ -89,7 +88,6 @@
                     <li id="footer-item"><a href="/"> Abuse </a></li>
                     <li id="footer-item" ><a href="/"> Feedback </a></li>
                     <li id="footer-item"><a href="{{ url_for('logout')}}" > Logout </a></li>
-
                 </ul>
             </div>
         
@@ -115,7 +113,7 @@
         </div>
     </div>
 
-    <!-- The Modal -->
+    <!-- File options modal -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -125,18 +123,14 @@
             <!-- Add more buttons as needed -->
         </div>
     </div>
-
-
     
 
     
     <script src="{{ url_for('static', filename='js/modal_manager.js') }}"></script>
 
-
     <noscript>
         <strong>JavaScript is disabled on your browser.</strong>
-    </noscript>
-    
+    </noscript> 
 
 </body>
 </html>
