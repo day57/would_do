@@ -1,0 +1,30 @@
+
+
+#toolbar {
+    display: none !important;
+}
+
+/* Additional resets to ensure a consistent layout */
+body, h1, h2, h3, p, div, span {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+/* Style for <pre> and <code> blocks commonly used for displaying code */
+pre, code {
+    background-color: white ;   
+    display: block;
+    
+    overflow-x: auto; /* Allow horizontal scrolling for long lines of code */
+    
+    white-space: pre-wrap; /* Maintains formatting of whitespace */
+}
+
+pre {
+    margin: 0px 0; /* Add vertical spacing around code blocks */
+    white-space: pre-wrap; /* Wraps text within the pre element */
+}
+
+

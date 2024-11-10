@@ -1,8 +1,12 @@
+<!-- app/templates/index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSRF Token Meta Tag for JavaScript (optional if handling via JS) -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/directory.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/window_content.css') }}">
@@ -18,22 +22,29 @@
                 <div class="nav">
                     <div class="nav-container">
                         <div class="nav-left">
-                            <a class="img-ctn" id="nav-one"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"> </a>
-                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"></a>
+                            <a class="img-ctn" id="nav-one"> 
+                                <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon"> 
+                            </a>
+                            <a class="img-ctn"> 
+                                <img src="{{ url_for('static', filename='img/info.svg') }}" alt="Info Icon" id="nav-icon">
+                            </a>
                         </div>
                         <div class="nav-right">
-                            <a class="img-ctn"> <img src="{{ url_for('static', filename='img/user-profile.svg') }}" alt="Profile Icon" id="nav-icon"> </a>
+                            <a class="img-ctn"> 
+                                <img src="{{ url_for('static', filename='img/user-profile.svg') }}" alt="Profile Icon" id="nav-icon"> 
+                            </a>
                         </div>
                     </div>
                 </div>
                 <h1>Welcome to the User Creation Page</h1>
-                <form action="/create_user" method="post">
+                <form method="POST" action="{{ url_for('main.create_user') }}">
+                    {{ form.hidden_tag() }} <!-- Includes CSRF token and other hidden fields -->
                     <button type="submit">Create User</button>
                 </form>
             </div>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='js/create_user.js') }}"></script>
 </body>
 </html>
-
 

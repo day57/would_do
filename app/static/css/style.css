@@ -200,3 +200,12 @@ ol li::before {
 ol li::after {
 
 }
+
+
+
+/* upload logic */
+
+#messageContainer {
+    margin-top: 10px;
+    font-weight: bold;
+}

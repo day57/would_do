@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modals/upload_file.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modals/edit_file.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/code_view.css') }}">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <title> File view </title>
 </head>
@@ -37,25 +39,31 @@
                         {{ directory_tree_html | safe }}
                     </div>
                     <div class="window-content-container">
-                        <div class="window-content">
-                            <div class="window-content-header">
-                                {% if file_info %}
-                                <div class="file_info_left">
-                                    <p id="file_name">{{ file_info.name }}</p>
+                        <div class="window-content-header">
+                            {% if file_info %}
+                            <div class="file_info_left">
+                                <p id="file_name">{{ file_info.name }}</p>
+                                -
+                                <div class="file_size_container">
+                                    <p id="file_size">{{ file_info.size }}</p>
                                 </div>
-                                <div class="file_info_right">
-                                    <div class="file_size_container">
-                                        <p id="file_size">{{ file_info.size }}</p>
-                                    </div>
-                                    <!-- Menu Button to trigger modal -->
-                                    <button id="editBtn" class="menu-button">
-                                        edit options
-                                        <!-- <img src="{{ url_for('static', filename='img/menu-icon.svg') }}" alt="Menu Icon"> -->
-                                    </button>
-                                </div>
-                                {% endif %}
+                            </div>
+                            <div class="file_info_right">  
+                                <!-- Menu Button to trigger modal -->
+                                <button 
+                                    class="open-modal-btn" 
+                                    data-modal-target="optionsModal" 
+                                    data-file-token="{{ file_info.token }}" 
+                                    data-file-name="{{ file_info.name }}"
+                                >
+                                    Options
+                                </button>
 
                             </div>
+                            {% endif %}
+
+                        </div>
+                        <div class="window-content">
                             <div class="content_background">
                                 {% if content %}
                                     {{ content | safe }}
@@ -68,7 +76,8 @@
                                         </div>
                                         <div class="welcome-bottom-container">
                                             <!-- Button to open the modal -->
-                                            <button id="uploadBtn">Upload File</button>
+                                            <button class="open-modal-btn" data-modal-target="uploadModal" id="openUploadModalBtn">Upload File</button>
+
                                         </div>
                                     </div>
                                 {% endif %}
@@ -87,7 +96,7 @@
                     <li id="footer-item"><a href="/"> FAQ </a></li>
                     <li id="footer-item"><a href="/"> Abuse </a></li>
                     <li id="footer-item" ><a href="/"> Feedback </a></li>
-                    <li id="footer-item"><a href="{{ url_for('logout')}}" > Logout </a></li>
+                    <li id="footer-item"><a href="{{ url_for('main.logout')}}" > Logout </a></li>
                 </ul>
             </div>
         
@@ -98,7 +107,10 @@
     <div id="uploadModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <form action="/upload" method="post" enctype="multipart/form-data">
+
+            <!-- File upload form inside the modal -->
+            <form id="fileUploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> <!-- Include the CSRF token -->
                 <input type="file" name="file" required>
                 <label for="expiration">File expiration:</label>
                 <select name="expiration" id="expiration">
@@ -107,26 +119,40 @@
                     <option value="30">1 Month</option>
                     <option value="90">3 Months</option>
                 </select>
-                <button type="submit">Upload</button>
-                <p> Max file size: 5400MB</p>
+                <button type="button" id="uploadFileBtn">Upload File</button>
+                <p>Max file size: 5400MB</p>
             </form>
+
+            <div id="messageContainer"></div>
         </div>
     </div>
 
-    <!-- File options modal -->
-    <div id="editModal" class="modal">
+
+    <!-- The Options Modal -->
+    <div id="optionsModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>Edit File Actions for {{ file_info.name }}</p>
-            <a href="{{ url_for('download_file', token=file_info.token) }}" class="action-button">Download</a>
-            <button onclick="confirmDelete('{{ file_info.token }}')" class="action-button">Delete</button>
-            <!-- Add more buttons as needed -->
+            <span class="close-modal-btn">&times;</span>
+            <p>Options for <span id="optionFileName">[File Name]</span></p>
+            <a href="/download/{{ file_info.token }}" id="downloadFileLink" class="action-button" data-file-name="{{ file_info.name }}">Download</a>
+            <button class="action-button delete-button" data-token="" id="deleteFileBtn">Delete</button>
+            <!-- Add more action buttons as needed -->
         </div>
     </div>
+
+
     
 
     
+    <!--  JavaScript files -->
     <script src="{{ url_for('static', filename='js/modal_manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/delete_file.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/create_user.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/style.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/download_file.js') }}"></script>
+
+ 
+
 
     <noscript>
         <strong>JavaScript is disabled on your browser.</strong>

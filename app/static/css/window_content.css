@@ -10,6 +10,8 @@
     border-radius: 0px 0px 6px 6px;
     height: 100%;
     display: flex;
+
+    
 }
 
 .content_background  img {
@@ -23,14 +25,15 @@
 
 .window-content {
     width: 100%;
-    height: 95%;
+    height: 100%;
     /* Set a fixed height or max-height */
     justify-self: center;
     align-self: center;
     display: flex;
     flex-direction: column; /* Ensure content flows vertically */
-    overflow-y: auto; /* Enables vertical scrolling */
-    overflow-x: hidden; /* Hides horizontal scrolling */
+    overflow-y: hidden; /* Enables vertical scrolling */
+    overflow-x: hidden;
+
 
     border-radius: 6px;
 
@@ -39,7 +42,7 @@
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     
 
-  margin-bottom: 30px;
+  
 }
 
 /* window-content-container scroll
@@ -74,14 +77,16 @@
 
 
 .window-content-container {
-    padding: 10px 10px 0px 10px;
-    height: 100%;
+    padding: 10px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     overflow-y: hidden;
     color: var(--text-color);
     -ms-overflow-style:none;
     scrollbar-width: none;
-    min-height: 100%;
+    
+    
 }
 
 .window-content-header {
@@ -144,6 +149,7 @@ pre {
 
 code {
     width: 100%;
+    height: 100%;
 }
 
 

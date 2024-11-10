@@ -1,7 +1,7 @@
 *{ margin: 0px; padding: 0px; }
 
 .directory-tree{
-  min-width: 21vw;
+  min-width: 18vw;
   padding: 10px 0 10px 10px;
   border-right: 1px solid var(--link-color); 
 }
@@ -65,7 +65,7 @@ body {
 }
 
 ul {
-  margin: 0 0 0 20px; 
+  margin: 0 10px 0 24px; 
   list-style: none; 
   line-height: 2em; 
   font-family: 'Roboto', sans-serif;
@@ -82,6 +82,16 @@ li:before, li:after {
   left: -15px;
   display: block;
   border-left: 1px solid var(--link-color);
+}
+
+#tree_li  {
+  overflow: nowrap;
+  word-wrap: break-word; /* Break long words to the next line */
+  word-break: break-all; /* Break the words at any point if necessary */
+  overflow-wrap: break-word; /* Ensures text will wrap when necessary */
+  width: 100%; /* Ensure the li uses the full width of the container */
+
+  max-width: 100%;
 }
 
 li:before {
@@ -129,3 +139,5 @@ label {
 label > img {
   vertical-align: middle;
 }
+
+
